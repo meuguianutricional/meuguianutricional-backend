@@ -3,7 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -41,6 +41,14 @@ app.post("/dietas", (req, res) => {
     res.status(201).json(novaDieta);
 });
 
+// Rota para buscar alertas (pacientes sem dieta)
+app.get("/alertas", (req, res) => {
+    const pacientesSemDieta = pacientes.filter(paciente => 
+        !dietas.some(dieta => dieta.pacienteId === paciente.id)
+    );
+    res.json(pacientesSemDieta);
+});
+
 app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+    console.log(`Servidor rodando na porta ${port}`);
 });
